@@ -1,39 +1,27 @@
-# QEC — Quantum Excellium Core
+# QEC — Quantum Excellium Core (public architecture overview)
+**Engineering Intelligence. Securing Autonomy.**
 
-A public architecture overview of **QEC**, the governance and execution layer within the Quantum Excellium ecosystem.
+QEC is a layered architecture for systems that must be not only capable, but **governable, auditable and provable**.
 
-## Public architecture map
-
-```text
-Intent / Task
-    |
-    v
-Policy & Governance
-    |
-    v
-Orchestration
-    |
-    v
-Controlled Tool / Model Execution
-    |
-    v
-Runtime Integrity & Telemetry
-    |
-    v
-Evidence / Audit / Verification
+```
+Intent  ->  Policy & Governance  ->  Orchestration  ->  Controlled Execution  ->  Runtime Integrity  ->  Evidence
 ```
 
-## Public capability areas
+| Layer | Public purpose | Boundary |
+|---|---|---|
+| Policy & Governance | what is allowed, by whom, under which budget and which class of irreversibility | policy formats and decision points are public; internal thresholds are not |
+| Orchestration | routing work to the right engine under resource and energy constraints | interfaces are public; scheduling and scoring logic is not |
+| Controlled Execution | fail-closed execution: beyond budget or outside the manifest, the action is refused | the refusal principle is public; enforcement internals are not |
+| Runtime Integrity | detecting alteration of models and runtimes, and acting on it | the principle is public; sealing mechanisms are patent-pending |
+| Evidence | chained journals, replay capsules, third-party verification | the format and the verifier are public — see [ledger-verify](https://github.com/Quantum-Architecture/ledger-verify) |
 
-- governance and policy enforcement;
-- adaptive orchestration;
-- controlled execution;
-- runtime integrity;
-- evidence generation and verification;
-- enterprise integration patterns.
+## Design rules
+1. **Separation of authority** — the component that proposes an action never authorises it.
+2. **Fail-closed by default** — when evidence is insufficient, the action does not happen; "insufficient" is a first-class verdict, never silently treated as "yes".
+3. **Every decision leaves a proof** — chained, verifiable by a third party, without disclosing the protected content.
+4. **Stated limits** — every component documents what it does not guarantee.
 
-This repository is descriptive, not an enabling implementation specification.
+## Controlled disclosure
+This repository publishes purpose, layers, interfaces and boundaries. It does not publish enabling algorithms, cryptographic parameters, internal thresholds or patent-sensitive implementation.
 
-Website: https://quantumexcellium.com
-
-Engineering Intelligence. Securing Autonomy.
+Licensing, partnerships and controlled evaluation: [quantumexcellium.com](https://quantumexcellium.com)
