@@ -1,27 +1,91 @@
-# QEC — Quantum Excellium Core (public architecture overview)
-**Engineering Intelligence. Securing Autonomy.**
+# QEC — Public Architecture Overview
 
-QEC is a layered architecture for systems that must be not only capable, but **governable, auditable and provable**.
+**Governed execution before action. Evidence after action.**
 
+This repository documents the public architecture of QEC without publishing the licensed runtime.
+
+## Control path
+
+```text
+Intent
+  -> Policy Decision
+  -> Authority / Delegation Check
+  -> Budget Check
+  -> Tool Boundary
+  -> Execution or Denial
+  -> Evidence Record
 ```
-Intent  ->  Policy & Governance  ->  Orchestration  ->  Controlled Execution  ->  Runtime Integrity  ->  Evidence
+
+## Public trust boundaries
+
+### Policy boundary
+The agent does not define its own authority at execution time.
+
+### Delegation boundary
+A child agent cannot receive more authority than its parent holds:
+
+```text
+child_authority ⊆ parent_authority
 ```
 
-| Layer | Public purpose | Boundary |
-|---|---|---|
-| Policy & Governance | what is allowed, by whom, under which budget and which class of irreversibility | policy formats and decision points are public; internal thresholds are not |
-| Orchestration | routing work to the right engine under resource and energy constraints | interfaces are public; scheduling and scoring logic is not |
-| Controlled Execution | fail-closed execution: beyond budget or outside the manifest, the action is refused | the refusal principle is public; enforcement internals are not |
-| Runtime Integrity | detecting alteration of models and runtimes, and acting on it | the principle is public; sealing mechanisms are patent-pending |
-| Evidence | chained journals, replay capsules, third-party verification | the format and the verifier are public — see [ledger-verify](https://github.com/Quantum-Architecture/ledger-verify) |
+This applies to tool scope, per-call limits and budget constraints.
 
-## Design rules
-1. **Separation of authority** — the component that proposes an action never authorises it.
-2. **Fail-closed by default** — when evidence is insufficient, the action does not happen; "insufficient" is a first-class verdict, never silently treated as "yes".
-3. **Every decision leaves a proof** — chained, verifiable by a third party, without disclosing the protected content.
-4. **Stated limits** — every component documents what it does not guarantee.
+### Tool boundary
+Side-effecting operations cross a governed integration boundary where policy, budget and authority can be checked before execution.
 
-## Controlled disclosure
-This repository publishes purpose, layers, interfaces and boundaries. It does not publish enabling algorithms, cryptographic parameters, internal thresholds or patent-sensitive implementation.
+### Evidence boundary
+Decisions are journaled. Public examples use a hash-chained JSONL ledger that can be checked with `ledger-verify`.
 
-Licensing, partnerships and controlled evaluation: [quantumexcellium.com](https://quantumexcellium.com)
+## Public evidence
+
+| Surface | Evidence |
+|---|---|
+| Pre-execution policy checks | qec-governed-agent-demo |
+| Budget enforcement | qec-governed-agent-demo |
+| Non-escalating delegation | public delegation tests |
+| Explicit denials | demo ledger |
+| Ledger tampering detection | ledger-verify |
+
+## Integration surfaces
+
+- agent-to-agent delegation;
+- MCP-style tool boundaries;
+- enterprise APIs;
+- audit export;
+- observability / evidence pipelines.
+
+These are integration surfaces, not claims of external-standard conformance.
+
+## Reproduce the public evidence
+
+```bash
+git clone https://github.com/Quantum-Architecture/qec-governed-agent-demo
+cd qec-governed-agent-demo
+python demo.py
+```
+
+Verifier:
+https://github.com/Quantum-Architecture/ledger-verify
+
+## Limits
+
+- no SOC 2 claim;
+- no ISO 27001 claim;
+- no OWASP Agent Control Standard conformance claim;
+- public shim ≠ licensed runtime;
+- hash chaining alone does not prove identity or trusted time.
+
+## Disclosure boundary
+
+No Local Core runtime, proprietary thresholds, private prompts, secret parameters or patent-enabling implementation detail belongs in this public repository.
+
+## Due diligence, in one sitting
+
+| Question a buyer asks | Document |
+|---|---|
+| How does one decision flow, and where is it journaled? | `ARCHITECTURE.md` (figure `docs/qec_architecture.svg`) |
+| What attacks does it stop, and what remains? | `THREAT_MODEL.md` |
+| Where does it sit against OWASP LLM Top 10, NIST AI RMF, ISO/IEC 42001, EU AI Act? | `CONTROL_MAPPING.md` — self-assessment, not conformance |
+| What does governance cost? | `BENCHMARK.md` — measured on the public shim, reproducible |
+| Can my engineer check all this in 30 minutes? | `EVALUATION_GUIDE.md` |
+| Can I archive proof that the checks passed? | `qec-governed-agent-demo/tools/evidence_pack.py` (content-hashed evidence file, re-checkable) and `sbom/cyclonedx.json` |
