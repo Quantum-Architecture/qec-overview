@@ -1,5 +1,7 @@
 # QEC — Public Architecture Overview
 
+[![self-check](https://github.com/Quantum-Architecture/qec-overview/actions/workflows/public-repo.yml/badge.svg)](https://github.com/Quantum-Architecture/qec-overview/actions/workflows/public-repo.yml)
+
 **Governed execution before action. Evidence after action.**
 
 This repository documents the public architecture of QEC without publishing the licensed runtime.
